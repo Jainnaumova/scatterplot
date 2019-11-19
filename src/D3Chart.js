@@ -7,7 +7,9 @@ const HEIGHT = 300 - MARGIN.TOP - MARGIN.BOTTOM;
 class D3Chart {
   constructor(element, data) {
     let vis = this;
-    console.log(data);
+
+    vis.data = data;
+
     vis.g = d3
       .select(element)
       .append("svg")
@@ -16,11 +18,21 @@ class D3Chart {
       .append("g")
       .attr("transform", `translate(${MARGIN.LEFT}, ${MARGIN.TOP})`);
 
+    // add scales
+    vis.x = d3.scaleLinear()
+      .range([0, WIDTH])
+
+    vis.y = d3.scaleLinear()
+      .range([HEIGHT, 0])
+
     vis.update();
   }
 
   update() {
     let vis = this;
+
+    vis.x.domain([0, d3.max(vis.data, d => Number(d.age))]);
+    vis.y.domain([0, d3.max(vis.data, d => Number(d.height))]);
   }
 }
 
