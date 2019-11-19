@@ -1,26 +1,47 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { Component } from "react";
+import Navbar from "react-bootstrap/Navbar";
+import Container from "react-bootstrap/Container";
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
+import { json } from "d3";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+import ChartWrapper from "./ChartWrapper";
+
+class App extends Component {
+  state = {
+    data: []
+  };
+
+  UNSAFE_componentWillMount() {
+    json("https://udemy-react-d3.firebaseio.com/children.json")
+      .then(data => this.setState({ data }))
+      .catch(error => console.log(error));
+  }
+
+  renderChart() {
+    if (this.state.data.length === 0) {
+      return "No data yet";
+    }
+    return <ChartWrapper data={this.state.data} />;
+  }
+
+  render() {
+    return (
+      <div>
+        <Navbar bg="light">
+          <Navbar.Brand>Scatterplotly</Navbar.Brand>
+        </Navbar>
+        <Container>
+          <Row>
+            <Col md={6} xs={12}>
+              {this.renderChart()}
+            </Col>
+            <Col md={6} xs={12}></Col>
+          </Row>
+        </Container>
+      </div>
+    );
+  }
 }
 
 export default App;
