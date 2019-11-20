@@ -31,8 +31,30 @@ class D3Chart {
   update() {
     let vis = this;
 
-    vis.x.domain([0, d3.max(vis.data, d => Number(d.age))]);
-    vis.y.domain([0, d3.max(vis.data, d => Number(d.height))]);
+    // add scales
+    vis.x.domain([0 , d3.max(vis.data, d => Number(d.age))]);
+    vis.y.domain([0 , d3.max(vis.data, d => Number(d.height))]);
+
+    // JOIN
+    const circles = vis.g.selectAll('circle')
+      .data(vis.data, d => d.name)
+
+    // EXIT
+    circles.exit().remove();
+
+    // UPDATE
+    circles
+      .attr('cx', d => vis.x(d.age))
+      .attr('cy', d => vis.y(d.height))
+
+    // ENTER
+    circles.enter().append('circle')
+      .attr('cx', d => vis.x(d.age))
+      .attr('cy', d => vis.y(d.height))
+      .attr('r', 5)
+      .attr('fill', 'grey')
+console.log(vis.x)
+
   }
 }
 
